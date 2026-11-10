@@ -1,7 +1,7 @@
 from utils import clearScreen
 from new_update import comingSoon
 from utils import clearScreen
-from shop import armorShop, weaponShop
+from shops import armorShop, weaponShop
 
 def shop():
     atShop = True
