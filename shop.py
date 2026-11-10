@@ -1,5 +1,7 @@
 from utils import clearScreen
 from new_update import comingSoon
+from utils import clearScreen
+from shop import armorShop
 
 def shop():
     atShop = True
@@ -13,9 +15,9 @@ def shop():
         print("4. Back to Main City")
         playerChoice = input("I need to go to: ")
         if playerChoice == "1":
-            print("Travelling...")
+            print("Going to Armor Shop")
             clearScreen(3)
-            comingSoon()
+            armorShop()
         elif playerChoice =="2":
             print("Travelling...")
             clearScreen(3)
