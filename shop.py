@@ -3,7 +3,7 @@ from new_update import comingSoon
 from utils import clearScreen
 from shops import armorShop, weaponShop
 
-def shop():
+def shop(playerID):
     atShop = True
     while atShop:
         clearScreen()
@@ -21,7 +21,7 @@ def shop():
         elif playerChoice =="2":
             print("Going to Weapon Shop")
             clearScreen(3)
-            weaponShop()
+            weaponShop(playerID)
         elif playerChoice == "3":
             print("Travelling...")
             clearScreen(3)

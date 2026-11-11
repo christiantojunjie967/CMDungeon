@@ -1,56 +1,81 @@
+
 from utils import clearScreen
+from database.items import getItemsByType
+from database.purchases import purchaseItem
+from database.player_data import getPlayerGold
+
 import time
 
-# Temporary player data
-gold = 1000
-weapon_inventory = []
 
-def weaponShop():
+def weaponShop(playerID):
     atWeaponShop = True
 
     while atWeaponShop:
         clearScreen()
+
+        # Retrieve weapons from database
+        weapons = getItemsByType("Weapon")
+
+        # Retrieve current player gold
+        gold = getPlayerGold(playerID)
 
         print("================================")
         print("          WEAPON SHOP")
         print("================================")
         print(f"Your Gold: {gold}")
         print()
-        print("1. Wooden Sword  - 100 Gold")
-        print("2. Iron Sword    - 300 Gold")
-        print("3. Steel Sword   - 600 Gold")
-        print("4. Return")
+
+        for weapon in weapons:
+            print(
+                f"{weapon['item_id']}. "
+                f"{weapon['item_name']} - "
+                f"{weapon['price']} Gold"
+            )
+
+        print()
+        print("0. Return")
 
         playerChoice = input("\nI want to buy: ")
 
-        if playerChoice == "1":
-            buyWeapon("Wooden Sword", 100)
-
-        elif playerChoice == "2":
-            buyWeapon("Iron Sword", 300)
-
-        elif playerChoice == "3":
-            buyWeapon("Steel Sword", 600)
-
-        elif playerChoice == "4":
+        if playerChoice == "0":
             atWeaponShop = False
+            continue
 
-        else:
+        # Validate player selection
+        if not playerChoice.isdigit():
             print("\nInvalid choice!")
             time.sleep(2)
+            continue
 
+        itemID = int(playerChoice)
 
-def buyWeapon(weaponName, price):
-    global gold
+        # Find selected weapon
+        selectedWeapon = None
 
-    if gold >= price:
-        gold -= price
-        weapon_inventory.append(weaponName)
+        for weapon in weapons:
+            if weapon["item_id"] == itemID:
+                selectedWeapon = weapon
+                break
 
-        print(f"\nYou purchased {weaponName}!")
-        print(f"Remaining Gold: {gold}")
+        if selectedWeapon is None:
+            print("\nWeapon not found!")
+            time.sleep(2)
+            continue
 
-    else:
-        print("\nYou don't have enough Gold!")
+        # Confirm purchase
+        print(f"\nPurchase {selectedWeapon['item_name']}?")
+        print(f"Price: {selectedWeapon['price']} Gold")
 
-    time.sleep(2)
+        confirmation = input("[Y/N]: ").upper()
+
+        if confirmation != "Y":
+            print("\nPurchase cancelled!")
+            time.sleep(2)
+            continue
+
+        # Execute purchase
+        success, message = purchaseItem(playerID, itemID)
+
+        print(f"\n{message}")
+
+        time.sleep(2)
